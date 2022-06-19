@@ -4,8 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def rad2cart(data, r, theta, x, y):
-    nt = len(theta)
-
     nx = len(x)
     ny = len(y)
     output = np.zeros(nx,ny)
@@ -17,8 +15,12 @@ def rad2cart(data, r, theta, x, y):
 
             #Find the polar coordinates around x,y and translate to cartesian
             points = findSurPoints(data,r,theta,ix,iy)
+            if (len(points) == 0):
+                output[j][i] = 0
+                continue
 
             #find a,b,c,d from axy + bx + cy + d = p(x,y)
+            # (a,b,c,d) = x in Ax = b waarin b de waarden van de punten is
             A = np.zeros(4,4)
             b = [[points[0][2]],[points[1][2]],points[2][2],points[3][2]]
             for k in range(4):
@@ -51,18 +53,25 @@ def cart2radCoords(x,y):
 def findSurPoints(data, r, theta, x, y):
     (ir,it) = cart2radCoords(x,y)
     
-    i = 1
-    while (r[i] < ir):
+    #find the first instance where r[i] > ir
+    i = 0
+    while (i < len(r) and r[i] < ir):
         i += 1
     
-    j = 1
-    while (theta[j] < it):
+    #find the first instance where theta[j] > it
+    j = 0
+    while (j < len(theta) and theta[j]< it):
         j += 1
     
-    points = [[i-1,j-1], [i - 1,j], [i, j - 1], [i,j]]
+    #Check of (ir,it) buiten onze grenzen ligt
+    if (j == 0 or j == len(theta) or i == 0 or i == len(r)):
+        return []
+
+    
+    points = [[i-1,j-1], [i - 1,j], [i, j - 1], [i,j]]#indexes van onze punten
     for point in points:
         (ix,iy) = rad2cartCoords(r[point[0]], theta[point[1]])
         ig = data[point[0],point[1]]
-        point = [ix,iy,ig]
+        point = [ix,iy,ig]#returnen van alle punten eromheen de x,y coordinaten samen met de waarde op dat punt
     return points
 
