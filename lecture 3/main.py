@@ -171,10 +171,8 @@ def Radon(u, n, sn, thetan):
                 dt = min(sx,sy) - t
                 t = min(sx,sy)
                 if (ix >= 0 and ix < n and iy >= 0 and iy < n):
-                    result[ix + iy*n][idxS + len(sn)*idxT] = dt
-                    #at location (ix,iy) we want to put value dt
-                    #dt is how long we were in the pixel
-                    dt = 0
+                    r += u[ix][iy]
+
                 #find if we moved in the x or y direction
                 if (sy < sx):
                     sy += dy
@@ -182,6 +180,7 @@ def Radon(u, n, sn, thetan):
                 else:
                     sx += dx
                     ix += dix
+            result[idxT][idxS] = r
     return result
 
 
