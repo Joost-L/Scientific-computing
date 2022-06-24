@@ -36,9 +36,8 @@ def teken_sinogram(u): #tekent oorspronkelijke plaatje en sinogram
     ax[0].imshow(u,extent=(-1,1,-1,1),vmin=0)
     ax[0].set_xlabel(r'$x$')
     ax[0].set_ylabel(r'$y$')
-    
+    #in dit geval hebben de waarden op de y-as een concrete betekenis en niet enkel relatief ten opzichte van elkaar, daarom is de extent anders
     ax[1].imshow(f,extent=(0,180, -1, 1), vmin = 0)
-    #in dit geval hebben de waarden op de y-as een concrete betekenis en niet enkel relatief ten opzichte van elkaar
     ax[1].set_xlabel(r'$\theta$ in graden')
     ax[1].set_ylabel(r'positie ten opzichte van midden')
     ax[1].set_aspect(90)
@@ -47,6 +46,7 @@ def teken_sinogram(u): #tekent oorspronkelijke plaatje en sinogram
 
 def func05(theta): #geeft de functie van de intensiteit op hoogte 0.5
     theta_rad = (theta*np.pi)/180
+    #de motivatie achter deze functie staat in het verslag. Het nut van deze specifieke is beperkt.
     return ((1 - np.tan(theta_rad))/(2) + 1/(2*np.sin(theta_rad)*np.cos(theta_rad)) - 1/(2*np.sin(theta_rad)))/(np.sqrt(2)*np.cos(theta_rad))
     
 def vergelijk(): #maakt een vergelijking tussen het exacte sinogram op hoogte 0.5 en die door de computer berekend worden
@@ -67,7 +67,7 @@ def vergelijk(): #maakt een vergelijking tussen het exacte sinogram op hoogte 0.
     f2_onder = [element/f2max for element in f2[24][0:46]]
     
     exact = np.zeros(46)
-    exact[0] = 1/np.sqrt(2)
+    exact[0] = 1/np.sqrt(2) #de eerste waarde moet exact worden berekend aangezien de meetkunde uitleg er niet voor werkt, puur tussen de 0 en 45 graden
     for i in range(1,46):
         exact[i] = func05(i)
     
